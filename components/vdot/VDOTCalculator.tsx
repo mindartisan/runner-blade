@@ -194,7 +194,7 @@ export default function VDOTCalculator() {
           </div>
 
           {/* 右侧：计算功能区和结果展示 (2 列，约 40%) */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-3">
             {/* VDOT 概述卡片 */}
             <VDOTOverview />
 
