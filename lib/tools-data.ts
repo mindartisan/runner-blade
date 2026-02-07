@@ -13,6 +13,7 @@ import { Tool, ToolCategory } from "@/types"
 export const TOOL_CATEGORIES: ToolCategory[] = [
   { id: "all", name: "全部" },
   { id: "jack-daniels", name: "杰克·丹尼尔斯" },
+  { id: "hansons", name: "汉森" },
 ]
 
 // ============================================================================
@@ -37,5 +38,13 @@ export const TOOLS: Tool[] = [
     icon: "Calculator",
     category: "jack-daniels",
     slug: "vdot",
+  },
+  {
+    id: "hansons-calculator",
+    name: "汉森计算器",
+    description: "基于汉森训练体系的配速计算工具",
+    icon: "TrendingUp",
+    category: "hansons",
+    slug: "hansons-calculator",
   },
 ]
