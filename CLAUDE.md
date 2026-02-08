@@ -4,7 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 项目概述
 
-Runner Blade 是一个专业的跑步工具集合网站，基于 Next.js 16 App Router 架构。当前实现的核心功能是 **VDOT 计算器**（基于 Jack Daniels Running Formula）。
+Runner Blade 是一个专业的跑步工具集合网站，基于 Next.js 16 App Router 架构。
+
+**已实现功能：**
+- **VDOT 计算器**（基于 Jack Daniels Running Formula）
+
+**开发中功能：**
+- **汉森计算器集合**（基于汉森训练体系的多个计算工具）🚧
 
 ## 设计风格
 
@@ -89,13 +95,16 @@ npm run fix:cn
 │   ├── ToolCard.tsx             # 工具卡片
 │   ├── ClockWidget.tsx          # 时钟小组件
 │   ├── ThemeToggle.tsx          # 主题切换按钮
-│   └── vdot/                    # VDOT 专用组件目录
-│       ├── VDOTCalculator.tsx        # 主容器组件
-│       ├── InputForm.tsx             # 输入表单（距离、时间、配速、高级选项）
-│       ├── TrainingDefinitions.tsx   # 训练类型定义展示（6种训练类型说明）
-│       ├── VDOTOverview.tsx          # VDOT 概述信息卡片
-│       ├── PaceTabs.tsx              # 配速标签页（比赛/训练/等效成绩）
-│       └── AdvancedAdjustmentResult.tsx  # 高级调整结果展示（温度/海拔）
+│   ├── vdot/                    # VDOT 专用组件目录
+│   │   ├── VDOTCalculator.tsx        # 主容器组件
+│   │   ├── InputForm.tsx             # 输入表单（距离、时间、配速、高级选项）
+│   │   ├── TrainingDefinitions.tsx   # 训练类型定义展示（6种训练类型说明）
+│   │   ├── VDOTOverview.tsx          # VDOT 概述信息卡片
+│   │   ├── PaceTabs.tsx              # 配速标签页（比赛/训练/等效成绩）
+│   │   └── AdvancedAdjustmentResult.tsx  # 高级调整结果展示（温度/海拔）
+│   └── hansons/                 # 汉森专用组件目录（🚧 开发中）
+│       └── dashboard/
+│           └── HansonsDashboard.tsx  # 汉森仪表板（展示4个即将推出的计算器）
 ├── contexts/                     # React Context
 │   └── ThemeContext.tsx         # 主题上下文（明暗/自动切换）
 ├── lib/                         # 核心业务逻辑（纯函数）
@@ -421,6 +430,7 @@ VDOT（V̇O₂max）相关信息卡片包含三个部分：
 export const TOOL_CATEGORIES: ToolCategory[] = [
   { id: "all", name: "全部" },
   { id: "jack-daniels", name: "杰克·丹尼尔斯" },
+  { id: "hansons", name: "汉森" },
 ]
 ```
 
@@ -436,8 +446,18 @@ export const TOOLS: Tool[] = [
     category: "jack-daniels",
     slug: "vdot",
   },
+  {
+    id: "hansons-calculator",
+    name: "汉森计算器",
+    description: "基于汉森训练体系的配速计算工具",
+    icon: "TrendingUp",
+    category: "hansons",
+    slug: "hansons-calculator",
+  },
 ]
 ```
+
+**注意**：汉森计算器工具正在开发中（🚧），相关页面和组件尚未完全实现。
 
 ### 路由规则
 
@@ -446,7 +466,10 @@ export const TOOLS: Tool[] = [
 
 示例:
 - VDOT 计算器: /tools/jack-daniels/vdot
+- 汉森计算器: /tools/hansons/hansons-calculator (🚧 开发中)
 ```
+
+**注意**：汉森计算器路由当前正在重构中，原始页面已移除，功能将通过仪表板模式重新实现。
 
 ## 主题系统 (lib/theme.ts + contexts/ThemeContext.tsx)
 
@@ -564,6 +587,20 @@ HomePage
 | ToolCard | [ToolCard.tsx](components/ToolCard.tsx) | 工具卡片，悬停光晕效果，lucide-react 图标 |
 | ClockWidget | [ClockWidget.tsx](components/ClockWidget.tsx) | 时钟小组件，数字发光效果，12 个刻度装饰 |
 | Footer | [Footer.tsx](components/Footer.tsx) | 全局底部信息，版权和链接 |
+
+### 汉森计算器页面 (🚧 开发中)
+
+汉森计算器模块正在重构中，原始的单页面模式已被移除，将采用仪表板模式重新实现。
+
+**重构内容：**
+- 从单页面 (`/tools/hansons/hansons-calculator`) 改为仪表板模式
+- 仪表板将展示4个独立的计算器工具
+- 每个计算器将有自己的独立页面路由
+
+**当前状态：**
+- ✅ 仪表板组件已创建：`components/hansons/dashboard/HansonsDashboard.tsx`
+- ✅ 分类和工具配置已添加：`lib/tools-data.ts`
+- ⏳ 各计算器页面正在开发中
 
 ### VDOT 计算器页面 (app/tools/jack-daniels/vdot/page.tsx)
 
@@ -767,10 +804,13 @@ style={{ backgroundColor: 'var(--color-primary)' }}
 
 当前可用分类（在 `lib/tools-data.ts` 的 `TOOL_CATEGORIES` 中定义）：
 
-| ID | 名称 |
-|----|------|
-| `all` | 全部 |
-| `jack-daniels` | 杰克·丹尼尔斯 |
+| ID | 名称 | 状态 |
+|----|------|------|
+| `all` | 全部 | ✅ 可用 |
+| `jack-daniels` | 杰克·丹尼尔斯 | ✅ 可用 |
+| `hansons` | 汉森 | 🚧 开发中 |
+
+**注意**：汉森分类的工具正在开发中，相关页面尚未完全实现。
 
 ## 设计原则
 
@@ -1030,9 +1070,11 @@ const IconComponent = Icons[tool.icon as keyof typeof Icons]
 
 常用图标：
 - `Calculator` - VDOT 计算器
+- `TrendingUp` - 汉森计算器
+- `Timer` - 比赛等效计算器（汉森）
 - `Sun`, `Moon`, `SunMoon` - 主题切换
 - `ArrowLeft` - 返回按钮
-- `Activity` - Logo 图标
+- `Activity` - Logo 图标 / 跑步机计算器（汉森）
 - `Info` - 信息提示
 
 ### ClockWidget 组件详情
@@ -1085,6 +1127,30 @@ Footer 是全局底部信息栏：
 | **悬停效果** | 下划线装饰 (decoration-2, underline-offset-2) |
 | **下划线颜色** | 主色 (var(--color-primary)) |
 | **布局** | 响应式 (移动端垂直，桌面端水平) |
+
+### HansonsDashboard 组件详情
+
+HansonsDashboard 是汉森计算器集合的仪表板页面（🚧 开发中）：
+
+| 特性 | 说明 |
+|------|------|
+| **状态** | 开发中，所有卡片显示为灰色且不可点击 |
+| **布局** | 2×2 网格，响应式设计 |
+| **卡片内容** | 4个即将推出的计算器 |
+
+**即将推出的计算器：**
+| ID | 名称 | 描述 | 图标 | 颜色 |
+|----|------|------|------|------|
+| `race-equivalency` | 比赛等效计算器 | 根据比赛成绩计算训练配速和等效成绩 | Timer | #00D4FF |
+| `race-equivalency-reverse` | 反向计算器 | 根据目标成绩推算当前需要达到的水平 | ArrowLeft | #FF6B00 |
+| `improvement` | 提升计算器 | 分析两次比赛成绩，预测提升空间 | TrendingUp | #00FFD4 |
+| `treadmill` | 跑步机计算器 | 速度与坡度配速转换 | Activity | #A78BFA |
+
+**组件特点：**
+- 每个卡片左侧有彩色装饰条
+- 卡片显示 "即将推出..." 提示
+- 底部有开发中说明文字
+- 包含返回首页链接和主题切换按钮
 
 ## 性能优化建议
 
@@ -1302,6 +1368,11 @@ export function calculateNewTool(input: InputType): ResultType {
 ## 未来规划
 
 ### 短期计划
+- [ ] 完成汉森计算器模块（仪表板 + 4个计算器）
+  - [ ] 比赛等效计算器（race-equivalency）
+  - [ ] 反向计算器（race-equivalency-reverse）
+  - [ ] 提升计算器（improvement）
+  - [ ] 跑步机计算器（treadmill）
 - [ ] 添加更多跑步工具（配速计算器、心率区间计算器）
 - [ ] 支持数据导出功能（PDF、CSV）
 
@@ -1313,6 +1384,22 @@ export function calculateNewTool(input: InputType): ResultType {
 - [ ] 移动端 App
 
 ## 更新日志
+
+### 2026-02-08 - 汉森计算器模块开发
+
+**新增分类和工具**
+- 新增汉森分类（`hansons`）
+- 新增汉森计算器工具（`hansons-calculator`）🚧 开发中
+
+**新增组件**
+- 新增 `components/hansons/dashboard/HansonsDashboard.tsx` 汉森仪表板组件
+- 仪表板展示4个即将推出的计算器：
+  - 比赛等效计算器（race-equivalency）
+  - 反向计算器（race-equivalency-reverse）
+  - 提升计算器（improvement）
+  - 跑步机计算器（treadmill）
+
+**注意**：汉森计算器功能正在重构中，原始页面已移除，将通过仪表板模式重新实现。
 
 ### 2026-02-05 - 依赖和工具链优化
 

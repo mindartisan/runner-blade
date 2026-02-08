@@ -11,7 +11,9 @@ const calculatorCards = [
     description: "根据比赛成绩计算训练配速和等效成绩",
     icon: "Timer",
     slug: "race-equivalency",
-    color: "#00D4FF"
+    color: "#00D4FF",
+    disabled: false,
+    href: "/tools/hansons/race-equivalency"
   },
   {
     id: "race-equivalency-reverse",
@@ -19,7 +21,8 @@ const calculatorCards = [
     description: "根据目标成绩推算当前需要达到的水平",
     icon: "ArrowLeft",
     slug: "race-equivalency-reverse",
-    color: "#FF6B00"
+    color: "#FF6B00",
+    disabled: true
   },
   {
     id: "improvement",
@@ -27,7 +30,8 @@ const calculatorCards = [
     description: "分析两次比赛成绩，预测提升空间",
     icon: "TrendingUp",
     slug: "improvement",
-    color: "#00FFD4"
+    color: "#00FFD4",
+    disabled: true
   },
   {
     id: "treadmill",
@@ -35,7 +39,8 @@ const calculatorCards = [
     description: "速度与坡度配速转换",
     icon: "Activity",
     slug: "treadmill",
-    color: "#A78BFA"
+    color: "#A78BFA",
+    disabled: true
   },
 ]
 
@@ -67,11 +72,49 @@ export default function HansonsDashboard() {
         <div className="grid md:grid-cols-2 gap-6">
           {calculatorCards.map((card) => {
             const IconComponent = Icons[card.icon as keyof typeof Icons] as React.ComponentType<{ className?: string; style?: React.CSSProperties }>
+
+            if (card.disabled) {
+              return (
+                <div
+                  key={card.id}
+                  className="card group relative overflow-hidden opacity-60"
+                  style={{ cursor: 'not-allowed', minHeight: '160px' }}
+                >
+                  {/* 左侧彩色装饰条 */}
+                  <div className="absolute left-0 top-0 bottom-0 w-1" style={{ backgroundColor: card.color }} />
+
+                  <div className="flex items-center gap-5 h-full py-6">
+                    {/* 图标 */}
+                    <div className="p-4 rounded-xl flex-shrink-0" style={{ backgroundColor: card.color + '20' }}>
+                      {IconComponent && <IconComponent className="w-8 h-8" style={{ color: card.color }} />}
+                    </div>
+
+                    {/* 内容 */}
+                    <div className="flex-1">
+                      <h3 className="text-lg font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>
+                        {card.name}
+                      </h3>
+                      <p className="text-sm mb-2" style={{ color: 'var(--color-text-secondary)' }}>
+                        {card.description}
+                      </p>
+                      <p className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+                        即将推出...
+                      </p>
+                    </div>
+
+                    {/* 右侧占位 */}
+                    <div className="w-6" />
+                  </div>
+                </div>
+              )
+            }
+
             return (
-              <div
+              <Link
                 key={card.id}
-                className="card cursor-pointer group relative overflow-hidden opacity-60"
-                style={{ cursor: 'not-allowed', minHeight: '160px' }}
+                href={card.href!}
+                className="card group relative overflow-hidden cursor-pointer opacity-100 hover:shadow-card-hover transition-all duration-300"
+                style={{ minHeight: '160px', textDecoration: 'none' }}
               >
                 {/* 左侧彩色装饰条 */}
                 <div className="absolute left-0 top-0 bottom-0 w-1" style={{ backgroundColor: card.color }} />
@@ -90,15 +133,16 @@ export default function HansonsDashboard() {
                     <p className="text-sm mb-2" style={{ color: 'var(--color-text-secondary)' }}>
                       {card.description}
                     </p>
-                    <p className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
-                      即将推出...
+                    <p className="text-xs flex items-center gap-1" style={{ color: card.color }}>
+                      <span>立即使用</span>
+                      <Icons.ArrowRight className="w-3 h-3" />
                     </p>
                   </div>
 
                   {/* 右侧占位 */}
                   <div className="w-6" />
                 </div>
-              </div>
+              </Link>
             )
           })}
         </div>
@@ -106,7 +150,7 @@ export default function HansonsDashboard() {
         {/* 底部说明 */}
         <div className="mt-8 text-center card">
           <p style={{ color: 'var(--color-text-secondary)' }}>
-            汉森计算器模块正在开发中，敬请期待更多功能...
+            汉森计算器集合正在不断完善中，更多功能即将推出...
           </p>
         </div>
       </div>
