@@ -10,8 +10,8 @@ export default function TrainingPacesResult({
 }) {
   return (
     <div className="card">
-      <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-        <span className="w-1 h-6 bg-blue-500 rounded"></span>
+      <h2 className="text-base font-bold mb-4 flex items-center gap-2">
+        <span className="w-1 h-5 bg-blue-500 rounded"></span>
         训练配速
       </h2>
 
@@ -19,13 +19,13 @@ export default function TrainingPacesResult({
         <table className="w-full">
           <thead>
             <tr className="border-b border-border">
-              <th className="text-left py-3 px-4 text-sm font-semibold text-text-secondary">
+              <th className="text-left py-3 px-4 text-xs font-semibold text-text-secondary">
                 训练类型
               </th>
-              <th className="text-right py-3 px-4 text-sm font-semibold text-text-secondary">
+              <th className="text-right py-3 px-4 text-xs font-semibold text-text-secondary">
                 配速/英里
               </th>
-              <th className="text-right py-3 px-4 text-sm font-semibold text-text-secondary">
+              <th className="text-right py-3 px-4 text-xs font-semibold text-text-secondary">
                 配速/公里
               </th>
             </tr>
@@ -42,15 +42,15 @@ export default function TrainingPacesResult({
                   style={{ borderLeft: `3px solid ${config.color}` }}
                 >
                   <td className="py-3 px-4">
-                    <div className="font-semibold" style={{ color: config.color }}>
+                    <div className="text-sm font-semibold" style={{ color: config.color }}>
                       {config.name}
                     </div>
-                    <div className="text-xs text-text-tertiary">{config.nameEn}</div>
+                    <div className="text-[10px] text-text-tertiary">{config.nameEn}</div>
                   </td>
-                  <td className="py-3 px-4 text-right font-mono">
+                  <td className="py-3 px-4 text-right font-mono text-xs">
                     {pace.pacePerMile}
                   </td>
-                  <td className="py-3 px-4 text-right font-mono">
+                  <td className="py-3 px-4 text-right font-mono text-xs">
                     {pace.pacePerKm}
                   </td>
                 </tr>

@@ -100,11 +100,11 @@ export default function RaceInputForm({
 
   return (
     <div className="card">
-      <h2 className="text-xl font-bold mb-6">输入比赛成绩</h2>
+      <h2 className="text-base font-bold mb-6">输入比赛成绩</h2>
 
       {/* 距离选择 */}
       <div className="mb-6">
-        <label className="block text-sm font-semibold mb-2">距离</label>
+        <label className="block text-xs font-semibold mb-2">距离</label>
         <select
           className="input-skeuo w-full"
           value={selectedDistance}
@@ -147,7 +147,7 @@ export default function RaceInputForm({
 
       {/* 时间输入 */}
       <div className="mb-6">
-        <label className="block text-sm font-semibold mb-2">完赛时间</label>
+        <label className="block text-xs font-semibold mb-2">完赛时间</label>
         <div className="flex gap-2 items-center">
           <div className="flex-1">
             <input
@@ -158,7 +158,7 @@ export default function RaceInputForm({
               min="0"
               max="23"
             />
-            <div className="text-xs text-center text-text-tertiary mt-1">小时</div>
+            <div className="text-[10px] text-center text-text-tertiary mt-1">小时</div>
           </div>
           <span className="text-text-primary">:</span>
           <div className="flex-1">
@@ -170,7 +170,7 @@ export default function RaceInputForm({
               min="0"
               max="59"
             />
-            <div className="text-xs text-center text-text-tertiary mt-1">分钟</div>
+            <div className="text-[10px] text-center text-text-tertiary mt-1">分钟</div>
           </div>
           <span className="text-text-primary">:</span>
           <div className="flex-1">
@@ -182,7 +182,7 @@ export default function RaceInputForm({
               min="0"
               max="59"
             />
-            <div className="text-xs text-center text-text-tertiary mt-1">秒</div>
+            <div className="text-[10px] text-center text-text-tertiary mt-1">秒</div>
           </div>
         </div>
       </div>
@@ -190,7 +190,7 @@ export default function RaceInputForm({
       {/* 天气调整（可选） */}
       <div className="mb-6">
         <button
-          className="text-sm text-text-secondary hover:text-brand-primary transition-colors mb-3 flex items-center gap-2"
+          className="text-xs text-text-secondary hover:text-brand-primary transition-colors mb-3 flex items-center gap-2"
           onClick={() => setShowWeather(!showWeather)}
         >
           <span className="transform transition-transform duration-200">

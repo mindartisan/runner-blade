@@ -9,8 +9,8 @@ export default function EquivalentPerformancesResult({
 }) {
   return (
     <div className="card">
-      <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-        <span className="w-1 h-6 bg-gray-500 rounded"></span>
+      <h2 className="text-base font-bold mb-4 flex items-center gap-2">
+        <span className="w-1 h-5 bg-gray-500 rounded"></span>
         等效比赛成绩
       </h2>
 
@@ -18,16 +18,16 @@ export default function EquivalentPerformancesResult({
         <table className="w-full">
           <thead>
             <tr className="border-b border-border">
-              <th className="text-left py-3 px-4 text-sm font-semibold text-text-secondary">
+              <th className="text-left py-3 px-4 text-xs font-semibold text-text-secondary">
                 距离
               </th>
-              <th className="text-right py-3 px-4 text-sm font-semibold text-text-secondary">
+              <th className="text-right py-3 px-4 text-xs font-semibold text-text-secondary">
                 完赛时间
               </th>
-              <th className="text-right py-3 px-4 text-sm font-semibold text-text-secondary">
+              <th className="text-right py-3 px-4 text-xs font-semibold text-text-secondary">
                 配速/英里
               </th>
-              <th className="text-right py-3 px-4 text-sm font-semibold text-text-secondary">
+              <th className="text-right py-3 px-4 text-xs font-semibold text-text-secondary">
                 配速/公里
               </th>
             </tr>
@@ -40,16 +40,16 @@ export default function EquivalentPerformancesResult({
                   index % 2 === 0 ? 'bg-theme-surface' : 'bg-theme-secondary'
                 }`}
               >
-                <td className="py-3 px-4 font-semibold">
+                <td className="py-3 px-4 font-semibold text-xs">
                   {perf.distance}
                 </td>
-                <td className="py-3 px-4 text-right font-mono">
+                <td className="py-3 px-4 text-right font-mono text-xs">
                   {perf.time}
                 </td>
-                <td className="py-3 px-4 text-right font-mono text-text-secondary">
+                <td className="py-3 px-4 text-right font-mono text-text-secondary text-xs">
                   {perf.pacePerMile}
                 </td>
-                <td className="py-3 px-4 text-right font-mono text-text-secondary">
+                <td className="py-3 px-4 text-right font-mono text-text-secondary text-xs">
                   {perf.pacePerKm}
                 </td>
               </tr>

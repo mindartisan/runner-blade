@@ -29,10 +29,10 @@ export default function HansonsRaceCalculator() {
       <main className="container mx-auto px-4 py-8">
         {/* 标题区 */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-text-primary">
+          <h1 className="text-xl md:text-2xl font-bold text-text-primary">
             汉森比赛等效计算器
           </h1>
-          <p className="text-text-secondary mt-2">
+          <p className="text-sm text-text-secondary mt-2">
             根据比赛成绩计算训练配速和等效成绩，基于汉森训练体系
           </p>
         </div>
@@ -64,7 +64,7 @@ export default function HansonsRaceCalculator() {
                         onClick={() => setActiveTab(tab.id)}
                       >
                         <IconComponent size={18} />
-                        <span className="font-medium">{tab.label}</span>
+                        <span className="text-sm font-medium">{tab.label}</span>
                       </button>
                     )
                   })}
