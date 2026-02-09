@@ -1,7 +1,7 @@
 "use client"
 
 import type { HansonsTrainingPace } from "@/types"
-import { TRAINING_TYPE_CONFIG } from "@/lib/hansons-race-calculator"
+import { TRAINING_TYPE_CONFIG } from "@/types"
 
 export default function TrainingPacesResult({
   trainingPaces

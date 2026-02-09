@@ -90,6 +90,20 @@ export interface VDOTCalculationError {
 
 // ========== 汉森计算器类型定义 ==========
 
+// 训练类型配置（用于显示）
+export const TRAINING_TYPE_CONFIG: Record<HansonsTrainingType, { name: string; nameEn: string; color: string }> = {
+  easy: { name: '轻松跑', nameEn: 'Easy', color: '#28a745' },
+  moderate: { name: '中等跑', nameEn: 'Moderate', color: '#17a2b8' },
+  longRuns: { name: '长距离跑', nameEn: 'Long Runs', color: '#ffc107' },
+  speed: { name: '速度训练', nameEn: 'Speed Workouts', color: '#fd7e14' },
+  vo2max: { name: 'VO₂max训练', nameEn: 'Vo2max Workouts', color: '#dc3545' },
+  threshold: { name: '乳酸阈值', nameEn: 'Lactate Threshold', color: '#6610f2' },
+  strength: { name: '力量训练', nameEn: 'Strength Workouts', color: '#6f42c1' },
+  halfMarTempo: { name: '半马节奏', nameEn: 'Half Mar Tempos', color: '#e83e8c' },
+  marathonTempo: { name: '马拉松节奏', nameEn: 'Marathon Tempos', color: '#d63384' },
+  strides: { name: '加速跑', nameEn: 'Strides', color: '#fd7e14' },
+}
+
 // 汉森训练类型（10种）
 export type HansonsTrainingType =
   | 'easy'          // 轻松跑

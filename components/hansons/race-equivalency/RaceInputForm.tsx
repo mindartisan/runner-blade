@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { calculateHansonsRacePaces } from "@/lib/hansons-race-calculator"
 import type { HansonsRaceResult } from "@/types"
 
 // 预设距离选项
@@ -38,43 +37,64 @@ export default function RaceInputForm({
   const [windSpeed, setWindSpeed] = useState<string>("")
   const [weatherUnit, setWeatherUnit] = useState<'imperial' | 'metric'>('imperial')
 
-  const handleCalculate = () => {
-    // 计算距离
-    let distanceMeters: number
-    if (selectedDistance && selectedDistance !== 'custom') {
-      distanceMeters = parseFloat(selectedDistance)
-    } else if (customDistance && distanceUnit) {
-      const unitMultipliers = { meters: 1, kilometers: 1000, miles: 1609.344 }
-      distanceMeters = parseFloat(customDistance) * unitMultipliers[distanceUnit]
-    } else {
-      return // 无效输入
+  // 加载和错误状态
+  const [isLoading, setIsLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string>("")
+
+  const handleCalculate = async () => {
+    setIsLoading(true)
+    setErrorMessage("")
+
+    const requestBody: any = {
+      C3: hours.padStart(2, '0'),
+      D3: minutes.padStart(2, '0'),
+      E3: seconds.padStart(2, '0'),
+      G11: weatherUnit,
     }
 
-    // 计算时间（秒）
-    const timeSeconds =
-      parseInt(hours || "0") * 3600 +
-      parseInt(minutes || "0") * 60 +
-      parseInt(seconds || "0")
-
-    if (timeSeconds === 0) {
+    // 处理距离
+    if (selectedDistance && selectedDistance !== 'custom') {
+      requestBody.race_type = selectedDistance
+    } else if (customDistance && distanceUnit) {
+      const unitMultipliers: Record<typeof distanceUnit, string> = {
+        meters: '1',
+        kilometers: '1000',
+        miles: '1609.34',
+      }
+      requestBody.F3 = customDistance
+      requestBody.race_units = unitMultipliers[distanceUnit]
+    } else {
+      setIsLoading(false)
       return
     }
 
-    // 构建天气参数（如果提供）
-    const weather = (showWeather && temperature && humidity && windSpeed) ? {
-      temperature: parseFloat(temperature),
-      temperatureUnit: weatherUnit,
-      humidity: parseFloat(humidity),
-      windSpeed: parseFloat(windSpeed),
-      windUnit: weatherUnit
-    } : undefined
+    // 处理天气参数
+    if (showWeather) {
+      if (temperature) requestBody.G8 = temperature
+      if (humidity) requestBody.G9 = humidity
+      if (windSpeed) requestBody.G10 = windSpeed
+    }
 
-    // 调用计算函数
     try {
-      const result = calculateHansonsRacePaces(distanceMeters, timeSeconds, weather)
-      onCalculate(result)
+      const response = await fetch('/api/hansons/race-equivalency', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestBody),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        setErrorMessage(data.message || '服务暂不可用，请稍后重试')
+        return
+      }
+
+      onCalculate(data)
     } catch (error) {
-      console.error("计算错误:", error)
+      setErrorMessage('网络请求失败，请检查连接后重试')
+      console.error('计算错误:', error)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -91,7 +111,6 @@ export default function RaceInputForm({
           onChange={(e) => {
             const value = e.target.value
             setSelectedDistance(value)
-            // 如果不是自定义距离，清空自定义输入
             if (value !== 'custom') {
               setCustomDistance("")
             }
@@ -104,7 +123,6 @@ export default function RaceInputForm({
           <option value="custom">自定义距离</option>
         </select>
 
-        {/* 只有选择"自定义距离"时才显示 */}
         {selectedDistance === 'custom' && (
           <div className="animate-in fade-in slide-in-from-top-2 mt-3 flex gap-2">
             <input
@@ -249,9 +267,20 @@ export default function RaceInputForm({
       <button
         className="btn-primary w-full"
         onClick={handleCalculate}
+        disabled={isLoading}
       >
-        计算配速
+        {isLoading ? '计算中...' : '计算配速'}
       </button>
+
+      {/* 错误提示 */}
+      {errorMessage && (
+        <div className="mt-3 p-3 rounded-lg text-sm bg-red-500/20 text-red-200 border border-red-500/30">
+          <div className="flex items-start gap-2">
+            <span className="font-medium">❌</span>
+            <span>{errorMessage}</span>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
