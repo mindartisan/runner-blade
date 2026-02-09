@@ -96,7 +96,7 @@ export const TRAINING_TYPE_CONFIG: Record<HansonsTrainingType, { name: string; n
   moderate: { name: '中等跑', nameEn: 'Moderate', color: '#17a2b8' },
   longRuns: { name: '长距离跑', nameEn: 'Long Runs', color: '#ffc107' },
   speed: { name: '速度训练', nameEn: 'Speed Workouts', color: '#fd7e14' },
-  vo2max: { name: 'VO₂max训练', nameEn: 'Vo2max Workouts', color: '#dc3545' },
+  vo2max: { name: 'VO₂max 训练', nameEn: 'Vo2max Workouts', color: '#dc3545' },
   threshold: { name: '乳酸阈值', nameEn: 'Lactate Threshold', color: '#6610f2' },
   strength: { name: '力量训练', nameEn: 'Strength Workouts', color: '#6f42c1' },
   halfMarTempo: { name: '半马节奏', nameEn: 'Half Mar Tempos', color: '#e83e8c' },
@@ -117,14 +117,11 @@ export type HansonsTrainingType =
   | 'marathonTempo' // 马拉松节奏跑
   | 'strides'       // 加速跑
 
-// 训练配速（部分为范围，部分为单一配速）
+// 训练配速
 export interface HansonsTrainingPace {
   type: HansonsTrainingType
-  name: string
-  nameEn: string
-  pacePerMile: string  // 格式: "MM:SS" 或 "MM:SS - MM:SS"
+  pacePerMile: string
   pacePerKm: string
-  isRange: boolean  // true表示范围，false表示单一配速
 }
 
 // 比赛信息

@@ -16,10 +16,8 @@ export interface HansonsApiResult {
   }
   trainingPaces: Array<{
     type: string
-    name: string
     pacePerMile: string
     pacePerKm: string
-    isRange: boolean
   }>
   equivalentPerformances: Array<{
     distance: string
@@ -181,14 +179,10 @@ function parseTrainingPaces($: cheerio.CheerioAPI): HansonsApiResult['trainingPa
       return
     }
 
-    const isRange = pacePerMile.includes('-')
-
     paces.push({
       type: TRAINING_TYPE_MAP[nameEn] || nameEn.toLowerCase().replace(/\s+/g, ''),
-      name: nameEn,
       pacePerMile,
       pacePerKm,
-      isRange,
     })
   })
 
