@@ -22,7 +22,8 @@ const calculatorCards = [
     icon: "ArrowLeft",
     slug: "race-equivalency-reverse",
     color: "#FF6B00",
-    disabled: true
+    disabled: false,
+    href: "/tools/hansons/race-equivalency-reverse"
   },
   {
     id: "improvement",

@@ -99,7 +99,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       if (preciseMode !== actualMode) {
         setActualMode(preciseMode)
       }
-    }, 60000) // 60秒
+    }, 60000) // 60 秒
 
     return () => clearInterval(interval)
   }, [mode, actualMode])

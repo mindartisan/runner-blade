@@ -7,15 +7,15 @@ import type { HansonsRaceResult } from "@/types"
 const RACE_DISTANCE_OPTIONS = [
   { label: "马拉松", value: "42194.99" },
   { label: "半程马拉松", value: "21097.49" },
-  { label: "10英里", value: "16090.34" },
-  { label: "20公里", value: "20000" },
-  { label: "15公里", value: "15000" },
-  { label: "12公里", value: "12000" },
-  { label: "10公里", value: "10000" },
-  { label: "8公里", value: "8000" },
-  { label: "5公里", value: "5000" },
-  { label: "3公里", value: "3000" },
-  { label: "1英里", value: "1609.34" },
+  { label: "10 英里", value: "16090.34" },
+  { label: "20 公里", value: "20000" },
+  { label: "15 公里", value: "15000" },
+  { label: "12 公里", value: "12000" },
+  { label: "10 公里", value: "10000" },
+  { label: "8 公里", value: "8000" },
+  { label: "5 公里", value: "5000" },
+  { label: "3 公里", value: "3000" },
+  { label: "1 英里", value: "1609.34" },
 ]
 
 export default function RaceInputForm({

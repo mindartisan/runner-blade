@@ -104,13 +104,13 @@ export const TRAINING_TYPE_CONFIG: Record<HansonsTrainingType, { name: string; n
   strides: { name: '加速跑', nameEn: 'Strides', color: '#fd7e14' },
 }
 
-// 汉森训练类型（10种）
+// 汉森训练类型（10 种）
 export type HansonsTrainingType =
   | 'easy'          // 轻松跑
   | 'moderate'      // 中等跑
   | 'longRuns'      // 长距离跑
   | 'speed'         // 速度训练
-  | 'vo2max'        // VO₂max训练
+  | 'vo2max'        // VO₂max 训练
   | 'threshold'     // 乳酸阈值
   | 'strength'      // 力量训练
   | 'halfMarTempo'  // 半马节奏跑

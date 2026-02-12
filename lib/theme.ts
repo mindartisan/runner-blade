@@ -105,7 +105,7 @@ async function getSunriseSunset(): Promise<{ sunrise: Date; sunset: Date } | nul
       }
       navigator.geolocation.getCurrentPosition(resolve, reject, {
         timeout: 10000,
-        maximumAge: 3600000, // 缓存1小时
+        maximumAge: 3600000, // 缓存 1 小时
       })
     })
 
