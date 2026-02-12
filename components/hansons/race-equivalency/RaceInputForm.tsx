@@ -147,27 +147,29 @@ export default function RaceInputForm({
 
         {/* 自定义距离 */}
         {isCustomDistance && (
-          <div className="grid grid-cols-[80px_1fr] items-center gap-4 animate-in fade-in slide-in-from-top-2">
-            <label className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-              自定义距离
-            </label>
-            <div className="flex gap-2 items-center">
-              <input
-                type="number"
-                value={customDistance}
-                onChange={(e) => setCustomDistance(e.target.value)}
-                placeholder="输入距离数值"
-                className="input-skeuo-center flex-1 font-mono text-base"
-              />
-              <select
-                className="select-skeuo min-w-[80px]"
-                value={distanceUnit}
-                onChange={(e) => setDistanceUnit(e.target.value as any)}
-              >
-                <option value="meters" style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-text-primary)' }}>米</option>
-                <option value="kilometers" style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-text-primary)' }}>公里</option>
-                <option value="miles" style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-text-primary)' }}>英里</option>
-              </select>
+          <div className="animate-in fade-in slide-in-from-top-2">
+            <div className="grid grid-cols-[80px_1fr] items-center gap-4">
+              <label className="text-sm font-semibold whitespace-nowrap" style={{ color: 'var(--color-text-primary)' }}>
+                自定义距离
+              </label>
+              <div className="flex gap-2 items-stretch flex-1 min-w-0">
+                <input
+                  type="number"
+                  value={customDistance}
+                  onChange={(e) => setCustomDistance(e.target.value)}
+                  placeholder="输入数值"
+                  className="input-skeuo-center flex-1 min-w-0 font-mono text-sm sm:text-base"
+                />
+                <select
+                  className="select-skeuo w-[80px] h-[50px] flex-shrink-0"
+                  value={distanceUnit}
+                  onChange={(e) => setDistanceUnit(e.target.value as any)}
+                >
+                  <option value="meters" style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-text-primary)' }}>米</option>
+                  <option value="kilometers" style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-text-primary)' }}>公里</option>
+                  <option value="miles" style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-text-primary)' }}>英里</option>
+                </select>
+              </div>
             </div>
           </div>
         )}

@@ -8,9 +8,10 @@ Runner Blade 是一个专业的跑步工具集合网站，基于 Next.js 16 App 
 
 **已实现功能：**
 - **VDOT 计算器**（基于 Jack Daniels Running Formula）
+- **汉森比赛等效计算器**（基于汉森训练体系）
 
 **开发中功能：**
-- **汉森计算器集合**（基于汉森训练体系的多个计算工具）🚧
+- **汉森其他计算器**（反向计算器、提升计算器、跑步机计算器）🚧
 
 ## 设计风格
 
@@ -86,6 +87,11 @@ npm run fix:cn
 │       └── jack-daniels/         # 杰克·丹尼尔斯分类
 │           └── vdot/             # VDOT 计算器
 │               └── page.tsx      # 页面入口（渲染 VDOTCalculator 组件）
+│       └── hansons/              # 汉森分类
+│           ├── hansons-calculator/ # 汉森仪表板
+│           │   └── page.tsx
+│           └── race-equivalency/  # 比赛等效计算器
+│               └── page.tsx
 ├── components/                   # React 组件
 │   ├── Header.tsx               # 全局头部导航
 │   ├── Footer.tsx               # 全局底部信息
@@ -102,13 +108,18 @@ npm run fix:cn
 │   │   ├── VDOTOverview.tsx          # VDOT 概述信息卡片
 │   │   ├── PaceTabs.tsx              # 配速标签页（比赛/训练/等效成绩）
 │   │   └── AdvancedAdjustmentResult.tsx  # 高级调整结果展示（温度/海拔）
-│   └── hansons/                 # 汉森专用组件目录（🚧 开发中）
-│       └── dashboard/
-│           └── HansonsDashboard.tsx  # 汉森仪表板（展示4个即将推出的计算器）
+│   └── hansons/                 # 汉森专用组件目录
+│       ├── dashboard/
+│       │   └── HansonsDashboard.tsx  # 汉森仪表板（展示4个计算器）
+│       └── race-equivalency/         # 比赛等效计算器组件
+│           ├── HansonsRaceCalculator.tsx  # 主容器组件
+│           ├── RaceInputForm.tsx          # 输入表单
+│           └── HansonsPaceTabs.tsx        # 配速标签页
 ├── contexts/                     # React Context
 │   └── ThemeContext.tsx         # 主题上下文（明暗/自动切换）
 ├── lib/                         # 核心业务逻辑（纯函数）
 │   ├── vdot-calculator.ts       # VDOT 计算核心算法
+│   ├── hansons-html-parser.ts   # 汉森官方 API HTML 解析器
 │   ├── theme.ts                 # 主题配置和工具函数
 │   └── tools-data.ts            # 工具元数据配置（分类、工具列表）
 ├── types/                       # TypeScript 类型定义
@@ -227,11 +238,70 @@ export interface Tool {
   category: string       // 对应 ToolCategory.id
   slug: string           // URL 路径段
 }
+
+// ========== 汉森计算器类型 ==========
+
+// 汉森训练类型（10种）
+export type HansonsTrainingType =
+  | 'easy'          // 轻松跑
+  | 'moderate'      // 中等跑
+  | 'longRuns'      // 长距离跑
+  | 'speed'         // 速度训练
+  | 'vo2max'        // VO₂max训练
+  | 'threshold'     // 乳酸阈值
+  | 'strength'      // 力量训练
+  | 'halfMarTempo'  // 半马节奏跑
+  | 'marathonTempo' // 马拉松节奏跑
+  | 'strides'       // 加速跑
+
+// 训练类型配置（用于显示）
+export const TRAINING_TYPE_CONFIG: Record<HansonsTrainingType, { name: string; nameEn: string; color: string }>
+
+// 训练配速
+export interface HansonsTrainingPace {
+  type: HansonsTrainingType
+  pacePerMile: string
+  pacePerKm: string
+}
+
+// 比赛信息
+export interface HansonsRaceInfo {
+  distance: string      // 距离标签（如 "Marathon", "10k"）
+  time: string          // 完赛时间（格式 "H:MM:SS"）
+  pacePerMile: string   // 每英里配速
+  pacePerKm: string     // 每公里配速
+}
+
+// 等效成绩
+export interface HansonsEquivalentPerformance {
+  distance: string      // 距离标签
+  distanceMeters: number // 距离（米）
+  time: string          // 预测时间
+  pacePerMile: string   // 每英里配速
+  pacePerKm: string     // 每公里配速
+}
+
+// 环境调整参数
+export interface HansonsWeatherAdjustment {
+  temperature: number   // 温度
+  temperatureUnit: 'imperial' | 'metric'  // imperial=°F, metric=°C
+  humidity: number      // 湿度百分比
+  windSpeed: number     // 风速
+  windUnit: 'imperial' | 'metric'  // imperial=mph, metric=km/h
+}
+
+// 计算结果
+export interface HansonsRaceResult {
+  raceInfo: HansonsRaceInfo
+  trainingPaces: HansonsTrainingPace[]
+  equivalentPerformances: HansonsEquivalentPerformance[]
+  weatherAdjusted?: boolean  // 是否应用了天气调整
+}
 ```
 
-## 核心计算函数 (lib/vdot-calculator.ts)
+## 核心计算函数
 
-### 常量定义
+### VDOT 计算器 (lib/vdot-calculator.ts)
 
 | 常量 | 值 | 说明 |
 |------|-----|------|
@@ -301,6 +371,79 @@ export const RACE_DISTANCES = [
 | `_secondsToMinutes(seconds)` | 秒转分钟 |
 | `_minutesToSeconds(minutes)` | 分钟转秒 |
 | `parseTime(timeStr)` | 解析时间字符串为秒数 |
+
+### 汉森 HTML 解析器 (lib/hansons-html-parser.ts)
+
+汉森官方 API HTML 响应解析器，用于解析官方 PHP 页面返回的 HTML，提取计算结果。
+
+**核心函数：**
+
+| 函数 | 说明 |
+|------|------|
+| `parseHansonsHtml(html)` | 主解析函数，返回 HansonsApiResult |
+| `parseRaceInfo($)` | 解析比赛信息表格 |
+| `parseTrainingPaces($)` | 解析训练配速表格 |
+| `parseEquivalentPerformances($)` | 解析等效成绩表格 |
+| `findTableByText($, searchText)` | 通过文本内容查找表格 |
+| `formatTimeText(rawText)` | 格式化时间为标准格式 |
+| `normalizeText(text)` | 标准化文本（大写、去空格）|
+| `matchText(text, pattern)` | 文本匹配（忽略大小写和空格）|
+| `preprocessHtml(html)` | 预处理 HTML，移除多余标签 |
+
+**HansonsApiResult 接口：**
+```typescript
+export interface HansonsApiResult {
+  raceInfo: {
+    distance: string      // 距离标签
+    time: string          // 完赛时间
+    pacePerMile: string   // 每英里配速
+    pacePerKm: string     // 每公里配速
+  }
+  trainingPaces: Array<{
+    type: string         // 训练类型
+    pacePerMile: string  // 每英里配速
+    pacePerKm: string    // 每公里配速
+  }>
+  equivalentPerformances: Array<{
+    distance: string     // 距离标签
+    time: string         // 预测时间
+    pacePerMile: string  // 每英里配速
+    pacePerKm: string    // 每公里配速
+  }>
+}
+```
+
+**训练类型映射 (TRAINING_TYPE_MAP)：**
+
+| 英文 | 类型代码 | 中文 |
+|------|----------|------|
+| Easy | easy | 轻松跑 |
+| Moderate | moderate | 中等跑 |
+| Long Runs | longRuns | 长距离跑 |
+| Speed Workouts | speed | 速度训练 |
+| Vo2max Workouts | vo2max | VO₂max 训练 |
+| Lactate Threshold | threshold | 乳酸阈值 |
+| Strength Workouts | strength | 力量训练 |
+| Half Mar Tempos | halfMarTempo | 半马节奏 |
+| Marathon Tempos | marathonTempo | 马拉松节奏 |
+| Strides | strides | 加速跑 |
+
+### 汉森训练类型配置
+
+汉森训练体系包含 10 种训练类型，每种类型都有对应的颜色标识：
+
+| 类型 | 代码 | 英文 | 颜色 |
+|------|------|------|------|
+| 轻松跑 | easy | Easy | #28a745 (绿色) |
+| 中等跑 | moderate | Moderate | #17a2b8 (青色) |
+| 长距离跑 | longRuns | Long Runs | #ffc107 (黄色) |
+| 速度训练 | speed | Speed Workouts | #fd7e14 (橙色) |
+| VO₂max 训练 | vo2max | Vo2max Workouts | #dc3545 (红色) |
+| 乳酸阈值 | threshold | Lactate Threshold | #6610f2 (紫色) |
+| 力量训练 | strength | Strength Workouts | #6f42c1 (深紫) |
+| 半马节奏 | halfMarTempo | Half Mar Tempos | #e83e8c (粉红) |
+| 马拉松节奏 | marathonTempo | Marathon Tempos | #d63384 (深粉) |
+| 加速跑 | strides | Strides | #fd7e14 (橙色) |
 
 ### 工具函数
 
@@ -454,10 +597,16 @@ export const TOOLS: Tool[] = [
     category: "hansons",
     slug: "hansons-calculator",
   },
+  {
+    id: "race-equivalency",
+    name: "比赛等效计算器",
+    description: "根据比赛成绩计算训练配速和等效成绩",
+    icon: "Timer",
+    category: "hansons",
+    slug: "race-equivalency",
+  },
 ]
 ```
-
-**注意**：汉森计算器工具正在开发中（🚧），相关页面和组件尚未完全实现。
 
 ### 路由规则
 
@@ -466,10 +615,9 @@ export const TOOLS: Tool[] = [
 
 示例:
 - VDOT 计算器: /tools/jack-daniels/vdot
-- 汉森计算器: /tools/hansons/hansons-calculator (🚧 开发中)
+- 汉森仪表板: /tools/hansons/hansons-calculator
+- 汉森比赛等效计算器: /tools/hansons/race-equivalency
 ```
-
-**注意**：汉森计算器路由当前正在重构中，原始页面已移除，功能将通过仪表板模式重新实现。
 
 ## 主题系统 (lib/theme.ts + contexts/ThemeContext.tsx)
 
@@ -588,19 +736,49 @@ HomePage
 | ClockWidget | [ClockWidget.tsx](components/ClockWidget.tsx) | 时钟小组件，数字发光效果，12 个刻度装饰 |
 | Footer | [Footer.tsx](components/Footer.tsx) | 全局底部信息，版权和链接 |
 
-### 汉森计算器页面 (🚧 开发中)
+### 汉森计算器页面
 
-汉森计算器模块正在重构中，原始的单页面模式已被移除，将采用仪表板模式重新实现。
+汉森计算器模块基于汉森训练体系（Hansons-Brooks Distance Project），提供专业的跑步训练配速计算。
 
-**重构内容：**
-- 从单页面 (`/tools/hansons/hansons-calculator`) 改为仪表板模式
-- 仪表板将展示4个独立的计算器工具
-- 每个计算器将有自己的独立页面路由
+**汉森仪表板** (`/tools/hansons/hansons-calculator`)
+- 展示 4 个计算器工具的入口
+- 2×2 网格布局，响应式设计
 
-**当前状态：**
-- ✅ 仪表板组件已创建：`components/hansons/dashboard/HansonsDashboard.tsx`
-- ✅ 分类和工具配置已添加：`lib/tools-data.ts`
-- ⏳ 各计算器页面正在开发中
+**已实现的计算器：**
+
+#### 比赛等效计算器 (`/tools/hansons/race-equivalency`) ✅
+
+根据比赛成绩计算训练配速和等效成绩，基于汉森训练体系。
+
+**组件结构：**
+```
+HansonsRaceCalculator (主容器)
+├── Header (顶部导航)
+├── 主内容区 (左右布局)
+│   ├── 左侧 (4列): RaceInputForm (输入表单)
+│   └── 右侧 (8列): HansonsPaceTabs (结果展示)
+└── Footer (底部信息)
+```
+
+**RaceInputForm 输入项：**
+| 输入项 | 说明 |
+|--------|------|
+| 比赛距离 | 预设距离（马拉松、半马、10K等）或自定义距离 |
+| 自定义距离 | 支持米/公里/英里单位 |
+| 完赛时间 | 小时:分钟:秒格式输入 |
+| 环境调整（可选） | 温度、湿度、风速 |
+
+**HansonsPaceTabs 标签页：**
+| 标签页 | 内容 |
+|--------|------|
+| 比赛信息 | 用户输入的比赛距离、时间、配速 |
+| 训练配速 | 10种汉森训练类型的配速 |
+| 等效成绩 | 各距离的预测比赛成绩 |
+
+**开发中的计算器（🚧）：**
+- 反向计算器（race-equivalency-reverse）
+- 提升计算器（improvement）
+- 跑步机计算器（treadmill）
 
 ### VDOT 计算器页面 (app/tools/jack-daniels/vdot/page.tsx)
 
@@ -808,9 +986,14 @@ style={{ backgroundColor: 'var(--color-primary)' }}
 |----|------|------|
 | `all` | 全部 | ✅ 可用 |
 | `jack-daniels` | 杰克·丹尼尔斯 | ✅ 可用 |
-| `hansons` | 汉森 | 🚧 开发中 |
+| `hansons` | 汉森 | ✅ 部分可用 |
 
-**注意**：汉森分类的工具正在开发中，相关页面尚未完全实现。
+**汉森分类工具状态：**
+- ✅ 汉森仪表板（hansons-calculator）
+- ✅ 比赛等效计算器（race-equivalency）
+- 🚧 反向计算器（race-equivalency-reverse）
+- 🚧 提升计算器（improvement）
+- 🚧 跑步机计算器（treadmill）
 
 ## 设计原则
 
@@ -1369,7 +1552,7 @@ export function calculateNewTool(input: InputType): ResultType {
 
 ### 短期计划
 - [ ] 完成汉森计算器模块（仪表板 + 4个计算器）
-  - [ ] 比赛等效计算器（race-equivalency）
+  - [x] 比赛等效计算器（race-equivalency）✅
   - [ ] 反向计算器（race-equivalency-reverse）
   - [ ] 提升计算器（improvement）
   - [ ] 跑步机计算器（treadmill）
@@ -1384,6 +1567,29 @@ export function calculateNewTool(input: InputType): ResultType {
 - [ ] 移动端 App
 
 ## 更新日志
+
+### 2026-02-12 - 汉森比赛等效计算器完成
+
+**新增功能**
+- ✅ 完成汉森比赛等效计算器（race-equivalency）
+  - 新增 `lib/hansons-html-parser.ts` - 汉森官方 API HTML 解析器
+  - 新增 `components/hansons/race-equivalency/` 目录
+    - `HansonsRaceCalculator.tsx` - 主容器组件
+    - `RaceInputForm.tsx` - 输入表单（支持预设距离、自定义距离、环境调整）
+    - `HansonsPaceTabs.tsx` - 结果展示标签页（比赛信息、训练配速、等效成绩）
+  - 新增 `app/tools/hansons/race-equivalency/page.tsx` - 页面路由
+
+**新增类型定义**
+- `HansonsTrainingType` - 汉森训练类型（10种）
+- `HansonsTrainingPace` - 训练配速
+- `HansonsRaceInfo` - 比赛信息
+- `HansonsEquivalentPerformance` - 等效成绩
+- `HansonsWeatherAdjustment` - 环境调整参数
+- `HansonsRaceResult` - 计算结果
+- `TRAINING_TYPE_CONFIG` - 训练类型配置（颜色、中英文名称）
+
+**新增工具配置**
+- 在 `lib/tools-data.ts` 添加 `race-equivalency` 工具
 
 ### 2026-02-08 - 汉森计算器模块开发
 

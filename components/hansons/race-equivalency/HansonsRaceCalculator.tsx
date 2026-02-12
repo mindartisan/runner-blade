@@ -1,8 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { Calculator } from "lucide-react"
-import Header from "@/components/Header"
+import Link from "next/link"
+import ThemeToggle from "@/components/ThemeToggle"
 import RaceInputForm from "./RaceInputForm"
 import HansonsPaceTabs from "./HansonsPaceTabs"
 import type { HansonsRaceResult } from "@/types"
@@ -12,16 +12,25 @@ export default function HansonsRaceCalculator() {
 
   return (
     <div className="min-h-screen bg-theme-background">
-      <Header />
-      <main className="container mx-auto px-4 py-8">
-        {/* 标题区 */}
-        <div className="mb-8">
-          <h1 className="text-xl md:text-2xl font-bold text-text-primary">
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        {/* 返回按钮和标题 */}
+        <div className="flex items-center justify-between mb-8">
+          <Link
+            href="/"
+            className="flex items-center gap-2 transition-colors duration-200"
+            style={{ color: 'var(--color-text-secondary)' }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-secondary)')}
+            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-text-secondary)')}
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            返回首页
+          </Link>
+          <h1 className="text-xl md:text-2xl font-bold" style={{ color: 'var(--color-text-primary)' }}>
             汉森比赛等效计算器
           </h1>
-          <p className="text-sm text-text-secondary mt-2">
-            根据比赛成绩计算训练配速和等效成绩，基于汉森训练体系
-          </p>
+          <ThemeToggle />
         </div>
 
         {/* 主内容区：左右布局 */}
@@ -36,7 +45,7 @@ export default function HansonsRaceCalculator() {
             <HansonsPaceTabs result={result} />
           </div>
         </div>
-      </main>
+      </div>
     </div>
   )
 }
