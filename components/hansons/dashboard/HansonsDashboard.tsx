@@ -28,11 +28,12 @@ const calculatorCards = [
   {
     id: "improvement",
     name: "提升计算器",
-    description: "分析两次比赛成绩，预测提升空间",
+    description: "根据当前成绩预测不同提升幅度后的目标时间",
     icon: "TrendingUp",
     slug: "improvement",
     color: "#00FFD4",
-    disabled: true
+    disabled: false,
+    href: "/tools/hansons/improvement"
   },
   {
     id: "treadmill",

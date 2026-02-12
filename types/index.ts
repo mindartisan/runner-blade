@@ -157,3 +157,24 @@ export interface HansonsRaceResult {
   equivalentPerformances: HansonsEquivalentPerformance[]
   weatherAdjusted?: boolean  // 是否应用了天气调整
 }
+
+// ========== 提升计算器类型定义 ==========
+
+// 提升百分比（7 个固定值）
+export type ImprovementPercentage = 1 | 2 | 3 | 4 | 5 | 7 | 10
+
+// 单个提升结果
+export interface ImprovementEntry {
+  percentage: ImprovementPercentage
+  improvedTimeSeconds: number
+  improvedTimeFormatted: string
+  timeSavedSeconds: number
+  timeSavedFormatted: string
+}
+
+// 提升计算结果
+export interface ImprovementResult {
+  originalTimeSeconds: number
+  originalTimeFormatted: string
+  improvements: ImprovementEntry[]
+}
