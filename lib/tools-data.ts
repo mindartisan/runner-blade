@@ -31,6 +31,7 @@ export const TOOL_CATEGORIES: ToolCategory[] = [
  * 最终路由: /tools/jack-daniels/vdot
  */
 export const TOOLS: Tool[] = [
+  // ========== 杰克·丹尼尔斯 ==========
   {
     id: "vdot",
     name: "VDOT 计算器",
@@ -39,12 +40,38 @@ export const TOOLS: Tool[] = [
     category: "jack-daniels",
     slug: "vdot",
   },
+
+  // ========== 汉森 ==========
   {
-    id: "hansons-calculator",
-    name: "汉森计算器",
-    description: "基于汉森训练体系的配速计算工具",
+    id: "race-equivalency",
+    name: "比赛等效计算器",
+    description: "根据比赛成绩计算训练配速和等效成绩",
+    icon: "Timer",
+    category: "hansons",
+    slug: "race-equivalency",
+  },
+  {
+    id: "race-equivalency-reverse",
+    name: "反向计算器",
+    description: "根据目标成绩推算当前需要达到的水平",
+    icon: "ArrowLeft",
+    category: "hansons",
+    slug: "race-equivalency-reverse",
+  },
+  {
+    id: "improvement",
+    name: "提升计算器",
+    description: "分析两次比赛成绩，预测提升空间",
     icon: "TrendingUp",
     category: "hansons",
-    slug: "hansons-calculator",
+    slug: "improvement",
+  },
+  {
+    id: "treadmill",
+    name: "跑步机计算器",
+    description: "速度与坡度配速转换",
+    icon: "Activity",
+    category: "hansons",
+    slug: "treadmill",
   },
 ]

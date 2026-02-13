@@ -21,14 +21,14 @@ export default function TreadmillCalculator() {
         {/* 头部导航 */}
         <div className="flex items-center justify-between mb-8">
           <Link
-            href="/tools/hansons/hansons-calculator"
+            href="/"
             className="flex items-center gap-2 transition-colors duration-200"
             style={{ color: "var(--color-text-secondary)" }}
             onMouseEnter={(e) => (e.currentTarget.style.color = "var(--color-secondary)")}
             onMouseLeave={(e) => (e.currentTarget.style.color = "var(--color-text-secondary)")}
           >
             <Icons.ArrowLeft className="w-5 h-5" />
-            返回仪表板
+            返回首页
           </Link>
 
           <h1 className="text-xl md:text-2xl font-bold" style={{ color: "var(--color-text-primary)" }}>
