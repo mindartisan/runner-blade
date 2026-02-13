@@ -178,3 +178,24 @@ export interface ImprovementResult {
   originalTimeFormatted: string
   improvements: ImprovementEntry[]
 }
+
+// ========== 跑步机计算器类型定义 ==========
+
+// 输入模式
+export type TreadmillInputMode = 'mph' | 'pace'
+
+// 单个坡度配速结果
+export interface TreadmillGradePace {
+  grade: number           // 坡度百分比（如 0, 0.5, 1, 1.5, ... 10）
+  gradeFormatted: string  // 格式化的坡度（如 "0%", "0.5%", "10%"）
+  pacePerMile: string     // 每英里配速
+  pacePerKm: string       // 每公里配速
+}
+
+// 跑步机计算结果
+export interface TreadmillResult {
+  mode: TreadmillInputMode       // 输入模式
+  inputValue: string             // 输入值（MPH 或配速）
+  inputDisplay: string           // 格式化显示的输入值
+  gradePaces: TreadmillGradePace[]  // 各坡度对应的配速
+}

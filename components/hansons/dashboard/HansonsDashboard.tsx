@@ -42,7 +42,8 @@ const calculatorCards = [
     icon: "Activity",
     slug: "treadmill",
     color: "#A78BFA",
-    disabled: true
+    disabled: false,
+    href: "/tools/hansons/treadmill"
   },
 ]
 
