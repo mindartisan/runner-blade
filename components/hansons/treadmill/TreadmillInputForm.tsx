@@ -119,32 +119,47 @@ export default function TreadmillInputForm({ onCalculate }: TreadmillInputFormPr
           </div>
         )}
 
-        {/* 模式切换 */}
-        <div
-          className="flex rounded-lg overflow-hidden border"
-          style={{ borderColor: "var(--color-border)" }}
-        >
+        {/* 输入模式切换 */}
+        <div className="flex gap-2">
           <button
-            className={`flex-1 py-2.5 px-4 text-sm font-medium transition-all duration-200 ${
-              mode === 'mph' ? 'text-brand-primary' : 'text-text-secondary'
+            onClick={() => handleModeChange('mph')}
+            className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+              mode === 'mph' ? 'shadow-lg' : ''
             }`}
             style={{
-              backgroundColor: mode === 'mph' ? "var(--color-surface)" : "transparent",
+              backgroundColor: mode === 'mph'
+                ? "rgba(167, 139, 250, 0.2)"
+                : "transparent",
+              border: "1px solid " + (mode === 'mph'
+                ? "rgba(167, 139, 250, 0.5)"
+                : "var(--color-border)"),
+              color: mode === 'mph'
+                ? "#A78BFA"
+                : "var(--color-text-secondary)"
             }}
-            onClick={() => handleModeChange('mph')}
           >
-            速度模式 (MPH)
+            <span className="block">速度模式</span>
+            <span className="text-xs opacity-70">MPH 英里/小时</span>
           </button>
           <button
-            className={`flex-1 py-2.5 px-4 text-sm font-medium transition-all duration-200 ${
-              mode === 'pace' ? 'text-brand-primary' : 'text-text-secondary'
+            onClick={() => handleModeChange('pace')}
+            className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+              mode === 'pace' ? 'shadow-lg' : ''
             }`}
             style={{
-              backgroundColor: mode === 'pace' ? "var(--color-surface)" : "transparent",
+              backgroundColor: mode === 'pace'
+                ? "rgba(167, 139, 250, 0.2)"
+                : "transparent",
+              border: "1px solid " + (mode === 'pace'
+                ? "rgba(167, 139, 250, 0.5)"
+                : "var(--color-border)"),
+              color: mode === 'pace'
+                ? "#A78BFA"
+                : "var(--color-text-secondary)"
             }}
-            onClick={() => handleModeChange('pace')}
           >
-            配速模式
+            <span className="block">配速模式</span>
+            <span className="text-xs opacity-70">目标配速/英里</span>
           </button>
         </div>
 

@@ -143,7 +143,8 @@ export default function ReverseInputForm({ onCalculate }: ReverseInputFormProps)
   return (
     <div className="card">
       {/* 标题：与比赛等效计算器一致的简洁风格 */}
-      <h3 className="text-base font-bold mb-4" style={{ color: "var(--color-text-primary)" }}>
+      <h3 className="text-base font-bold mb-4 flex items-center gap-2" style={{ color: "var(--color-text-primary)" }}>
+        <div className="w-1 h-5 rounded-full" style={{ backgroundColor: 'var(--color-secondary)' }} />
         输入目标成绩
       </h3>
 

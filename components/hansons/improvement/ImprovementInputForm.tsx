@@ -59,7 +59,8 @@ export default function ImprovementInputForm({ onCalculate }: ImprovementInputFo
   return (
     <div className="card">
       {/* 标题 */}
-      <h3 className="text-base font-bold mb-4" style={{ color: "var(--color-text-primary)" }}>
+      <h3 className="text-base font-bold mb-4 flex items-center gap-2" style={{ color: "var(--color-text-primary)" }}>
+        <div className="w-1 h-5 rounded-full" style={{ backgroundColor: 'var(--color-accent)' }} />
         输入当前成绩
       </h3>
 
