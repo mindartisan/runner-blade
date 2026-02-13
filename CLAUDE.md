@@ -8,6 +8,7 @@ Runner Blade 是一个专业的跑步工具集合网站，基于 Next.js 16 App 
 
 **已实现功能：**
 - **VDOT 计算器**（基于 Jack Daniels Running Formula）
+- **丹尼尔斯训练强度定义**（7 种跑步强度介绍）
 - **汉森比赛等效计算器**（基于汉森训练体系）
 
 **开发中功能：**
@@ -85,6 +86,8 @@ npm run fix:cn
 │   ├── globals.css               # 全局样式（CSS 变量、Tailwind 层）
 │   └── tools/                    # 各工具页面
 │       └── jack-daniels/         # 杰克·丹尼尔斯分类
+│           ├── overview/         # 丹尼尔斯训练体系介绍
+│           │   └── page.tsx      # 页面入口（渲染 DanielsDashboard 组件）
 │           └── vdot/             # VDOT 计算器
 │               └── page.tsx      # 页面入口（渲染 VDOTCalculator 组件）
 │       └── hansons/              # 汉森分类
@@ -107,7 +110,10 @@ npm run fix:cn
 │   │   ├── TrainingDefinitions.tsx   # 训练类型定义展示（6种训练类型说明）
 │   │   ├── VDOTOverview.tsx          # VDOT 概述信息卡片
 │   │   ├── PaceTabs.tsx              # 配速标签页（比赛/训练/等效成绩）
-│   │   └── AdvancedAdjustmentResult.tsx  # 高级调整结果展示（温度/海拔）
+│   │   ├── AdvancedAdjustmentResult.tsx  # 高级调整结果展示（温度/海拔）
+│   │   └── dashboard/                # 丹尼尔斯 Dashboard 目录
+│   │       ├── DanielsDashboard.tsx  # 丹尼尔斯训练体系介绍页面
+│   │       └── TrainingIntensityCard.tsx  # 训练强度卡片（带视频）
 │   └── hansons/                 # 汉森专用组件目录
 │       ├── dashboard/
 │       │   └── HansonsDashboard.tsx  # 汉森仪表板（展示4个计算器）
@@ -532,6 +538,24 @@ InputForm 组件支持三种计算模式：
 - 重复跑 (R): `#dc3545` (红色)
 - 快速重复 (F): `#6f42c1` (紫色)
 
+### 训练强度定义 (DanielsDashboard.tsx)
+
+丹尼尔斯 Overview 页面展示的 7 种训练强度，包含详细描述和视频：
+
+| 类型 | 英文 | 代码 | 颜色 | 视频 |
+|------|------|------|------|------|
+| 轻松跑 | Easy Pace | E | #28a745 | veAQ73OJdwY |
+| 马拉松配速 | Marathon Pace | M | #007bff | EO1hQ_kplgo |
+| 乳酸阈值 | Threshold Pace | T | #ffc107 | dxJVtPT6rHo |
+| 间歇跑 | Interval Pace | I | #fd7e14 | 7dQEwJhHWXk |
+| 重复跑 | Rep Pace | R | #dc3545 | BGQKlSU4HQM |
+| 快速重复 | Fast Reps Pace | F | #6f42c1 | - |
+| 加速跑 | Strides | ST | #fd7e14 | - |
+
+**两种展示对比：**
+- `TrainingDefinitions.tsx`: 6 种类型，用于 VDOT 计算器页面，包含变化/强度/目的/示例
+- `DanielsDashboard.tsx`: 7 种类型，用于 Overview 页面，包含详细描述和视频
+
 ### VDOT 概述 (VDOTOverview.tsx)
 
 VDOT（V̇O₂max）相关信息卡片包含三个部分：
@@ -730,7 +754,7 @@ HomePage
 |------|------|------|
 | Header | [Header.tsx](components/Header.tsx) | 全局头部导航，包含返回链接和主题切换 |
 | Hero | [Hero.tsx](components/Hero.tsx) | 首页 Hero 区域，背景光晕装饰，响应式布局 |
-| ToolGrid | [ToolGrid.tsx](components/ToolGrid.tsx) | 工具网格，支持分类过滤 |
+| ToolGrid | [ToolGrid.tsx](components/ToolGrid.tsx) | 工具网格，支持分类过滤，丹尼尔斯/汉森分类显示 overview 链接 |
 | FilterTabs | [FilterTabs.tsx](components/FilterTabs.tsx) | 分类过滤器标签，激活状态带光晕效果 |
 | ToolCard | [ToolCard.tsx](components/ToolCard.tsx) | 工具卡片，悬停光晕效果，lucide-react 图标 |
 | ClockWidget | [ClockWidget.tsx](components/ClockWidget.tsx) | 时钟小组件，数字发光效果，12 个刻度装饰 |
@@ -779,6 +803,60 @@ HansonsRaceCalculator (主容器)
 - 反向计算器（race-equivalency-reverse）
 - 提升计算器（improvement）
 - 跑步机计算器（treadmill）
+
+### 丹尼尔斯 Overview 页面 (app/tools/jack-daniels/overview/page.tsx)
+
+杰克·丹尼尔斯训练体系介绍页面，展示 7 种训练强度定义（带视频）和工具入口。
+
+```
+DanielsDashboard (主容器)
+├── Header (顶部导航)
+│   ├── 返回首页链接 (ArrowLeft)
+│   ├── 标题 "杰克·丹尼尔斯训练体系"
+│   └── ThemeToggle
+├── 简介卡片
+│   ├── BookOpen 图标 (霓虹蓝色)
+│   └── Jack Daniels 博士介绍 + VDOT 系统说明
+├── 训练强度定义区 (flex 单列)
+│   └── 7 个 TrainingIntensityCard
+│       ├── 轻松跑 (Easy Pace, E) + 视频
+│       ├── 马拉松配速 (Marathon Pace, M) + 视频
+│       ├── 乳酸阈值 (Threshold Pace, T) + 视频
+│       ├── 间歇跑 (Interval Pace, I) + 视频
+│       ├── 重复跑 (Rep Pace, R) + 视频
+│       ├── 快速重复 (Fast Reps Pace, F) - 无视频
+│       └── 加速跑 (Strides, ST) - 无视频
+├── 工具入口区 (md:grid-cols-2)
+│   └── VDOT 计算器卡片 → /tools/jack-daniels/vdot
+└── 底部资源链接
+    └── 数据来源：V.O2 (vdoto2.com)
+```
+
+**TrainingIntensityCard 组件：**
+
+可展开/收起的折叠卡片，支持 YouTube 视频嵌入。
+
+| 属性 | 类型 | 说明 |
+|------|------|------|
+| `id` | string | 训练强度 ID |
+| `name` | string | 中文名称 |
+| `englishName` | string | 英文名称 |
+| `shortCode` | string | 短码（如 E, M, T） |
+| `color` | string | 颜色标识 |
+| `description` | string | 详细描述（中文） |
+| `videoId` | string \| null | YouTube 视频 ID |
+
+**训练强度视频 ID 映射：**
+
+| ID | 名称 | 短码 | 颜色 | 视频 ID |
+|----|------|------|------|---------|
+| easy | 轻松跑 | E | #28a745 | veAQ73OJdwY |
+| marathon | 马拉松配速 | M | #007bff | EO1hQ_kplgo |
+| threshold | 乳酸阈值 | T | #ffc107 | dxJVtPT6rHo |
+| interval | 间歇跑 | I | #fd7e14 | 7dQEwJhHWXk |
+| repetition | 重复跑 | R | #dc3545 | BGQKlSU4HQM |
+| fastRep | 快速重复 | F | #6f42c1 | null |
+| strides | 加速跑 | ST | #fd7e14 | null |
 
 ### VDOT 计算器页面 (app/tools/jack-daniels/vdot/page.tsx)
 
@@ -1567,6 +1645,34 @@ export function calculateNewTool(input: InputType): ResultType {
 - [ ] 移动端 App
 
 ## 更新日志
+
+### 2026-02-13 - 丹尼尔斯 Overview 页面
+
+**新增功能**
+- ✅ 完成丹尼尔斯训练体系介绍页面（jack-daniels/overview）
+  - 新增 `components/vdot/dashboard/` 目录
+    - `DanielsDashboard.tsx` - 主容器组件
+    - `TrainingIntensityCard.tsx` - 可展开/收起的训练强度卡片（带视频）
+  - 新增 `app/tools/jack-daniels/overview/page.tsx` - 页面路由
+
+**训练强度定义（7种）**
+- 轻松跑 (Easy Pace, E) - 视频: veAQ73OJdwY
+- 马拉松配速 (Marathon Pace, M) - 视频: EO1hQ_kplgo
+- 乳酸阈值 (Threshold Pace, T) - 视频: dxJVtPT6rHo
+- 间歇跑 (Interval Pace, I) - 视频: 7dQEwJhHWXk
+- 重复跑 (Rep Pace, R) - 视频: BGQKlSU4HQM
+- 快速重复 (Fast Reps Pace, F) - 无视频
+- 加速跑 (Strides, ST) - 无视频
+
+**首页导航更新**
+- 修改 `components/ToolGrid.tsx`
+- 丹尼尔斯分类 tab 下显示「了解丹尼尔斯训练体系」链接
+- 汉森分类 tab 下显示「了解汉森训练体系」链接
+- 链接样式：右对齐，带右箭头图标
+
+**内容来源**
+- V.O2 Training Definitions (vdoto2.com)
+- Dr. Jack Daniels
 
 ### 2026-02-12 - 汉森比赛等效计算器完成
 

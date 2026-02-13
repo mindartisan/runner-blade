@@ -32,15 +32,15 @@ export default function ToolGrid() {
           onCategoryChange={setSelectedCategory}
         />
 
-        {/* 汉森分类：显示"了解更多"链接 */}
-        {selectedCategory === "hansons" && (
+        {/* 分类说明链接 */}
+        {(selectedCategory === "jack-daniels" || selectedCategory === "hansons") && (
           <div className="mb-6 flex justify-end">
             <Link
-              href="/tools/hansons/overview"
+              href={selectedCategory === "jack-daniels" ? "/tools/jack-daniels/overview" : "/tools/hansons/overview"}
               className="inline-flex items-center gap-1 text-sm transition-colors duration-200 hover:text-brand-primary"
               style={{ color: "var(--color-text-tertiary)" }}
             >
-              了解汉森训练体系
+              {selectedCategory === "jack-daniels" ? "了解丹尼尔斯训练体系" : "了解汉森训练体系"}
               <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
