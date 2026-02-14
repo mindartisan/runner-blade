@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
     "build": "next build",
+    "dev": "next dev",
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
@@ -12,7 +12,11 @@
     "fix:cn": "node scripts/fix-chinese-typesetting.js",
     "type-check": "tsc --noEmit",
     "clean": "rimraf .next out node_modules/.cache",
-    "reinstall": "rimraf node_modules package-lock.json && npm install"
+    "reinstall": "rimraf node_modules package-lock.json && npm install",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
   },
   "dependencies": {
     "@types/cheerio": "^0.22.35",
@@ -24,6 +28,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.3",
+    "@opennextjs/cloudflare": "^1.16.5",
     "@types/node": "^20.0.0",
     "@types/react": "^18.3.0",
     "@types/react-dom": "^18.3.0",
@@ -33,6 +38,7 @@
     "postcss": "^8.0.0",
     "rimraf": "^6.1.2",
     "tailwindcss": "^3.4.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "wrangler": "^4.65.0"
   }
 }

@@ -40,3 +40,8 @@ next-env.d.ts
 /.serena/
 /.spec-workflow/
 /.playwright-mcp/
+
+# OpenNext / Cloudflare
+.open-next
+.wrangler
+.dev.vars
