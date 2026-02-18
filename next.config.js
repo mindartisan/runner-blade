@@ -1,10 +1,11 @@
-const { initOpenNextCloudflareForDev } = require("@opennextjs/cloudflare");
-
-// 初始化 OpenNext Cloudflare 适配器（仅开发环境）
-initOpenNextCloudflareForDev();
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {};
+
+// 仅在 Cloudflare 开发模式下初始化适配器
+if (process.env.npm_lifecycle_event === "cf:dev") {
+  const { initOpenNextCloudflareForDev } = require("@opennextjs/cloudflare");
+  initOpenNextCloudflareForDev();
+}
 
 module.exports = nextConfig;
 
